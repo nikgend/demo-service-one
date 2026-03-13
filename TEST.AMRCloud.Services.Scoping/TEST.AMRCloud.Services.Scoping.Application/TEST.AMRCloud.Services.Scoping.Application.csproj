@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>TEST.AMRCloud.Services.Scoping.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TEST.AMRCloud.Services.Scoping.Domain\TEST.AMRCloud.Services.Scoping.Domain.csproj" />
+    <ProjectReference Include="..\TEST.AMRCloud.Services.Scoping.Infrastructure\TEST.AMRCloud.Services.Scoping.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsTestProject>true</IsTestProject>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>TEST.AMRCloud.Services.Scoping.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="4.5.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="6.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TEST.AMRCloud.Services.Scoping.API\TEST.AMRCloud.Services.Scoping.API.csproj" />
+    <ProjectReference Include="..\TEST.AMRCloud.Services.Scoping.Application\TEST.AMRCloud.Services.Scoping.Application.csproj" />
+    <ProjectReference Include="..\TEST.AMRCloud.Services.Scoping.Domain\TEST.AMRCloud.Services.Scoping.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
