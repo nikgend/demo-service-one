@@ -20,21 +20,28 @@ public class CreateEngagementCommandHandler : IRequestHandler<CreateEngagementCo
 
     public async Task<EngagementDto?> Handle(CreateEngagementCommand request, CancellationToken cancellationToken)
     {
-        var engagement = new Engagement
+        try
         {
-            EngagementName = request.EngagementName,
-            EngagementCode = request.EngagementCode,
-            EngagementManager = request.EngagementManager,
-            EngagementPartner = request.EngagementPartner,
-            PeriodEndDate = request.PeriodEndDate
-        };
+            var engagement = new Engagement
+            {
+                EngagementName = request.EngagementName,
+                EngagementCode = request.EngagementCode,
+                EngagementManager = request.EngagementManager,
+                EngagementPartner = request.EngagementPartner,
+                PeriodEndDate = request.PeriodEndDate
+            };
 
-        var createdEngagement = await _engagementRepository.AddAsync(engagement);
+            var createdEngagement = await _engagementRepository.AddAsync(engagement);
 
-        if (createdEngagement == null)
-            return null;
+            if (createdEngagement == null)
+                return null;
+            return MapToDto(createdEngagement);
+        }
+        catch (Exception)
+        {
 
-        return MapToDto(createdEngagement);
+            throw;
+        }
     }
 
     private EngagementDto MapToDto(Engagement engagement)
