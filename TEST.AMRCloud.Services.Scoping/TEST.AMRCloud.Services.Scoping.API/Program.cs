@@ -9,6 +9,26 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins(
+                "http://localhost:3000",
+                "http://localhost:4200",
+                "http://localhost:5173",
+                "http://127.0.0.1:3000",
+                "http://127.0.0.1:4200",
+                "http://127.0.0.1:5173"
+            )
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+        });
+});
+
 // Add database context
 builder.Services.AddDbContext<ScopingContext>(options =>
     options.UseSqlServer(
@@ -28,6 +48,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowSpecificOrigin");
 app.UseAuthorization();
 app.MapControllers();
 

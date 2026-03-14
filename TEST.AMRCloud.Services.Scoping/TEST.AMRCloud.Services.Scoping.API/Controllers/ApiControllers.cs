@@ -179,7 +179,8 @@ public class EngagementController : ControllerBase
                 return StatusCode(500, "An error occurred while creating the engagement");
             }
 
-            return CreatedAtAction(nameof(GetEngagement), new { id = result.Id }, result);
+            return CreatedAtAction(nameof(GetEngagement), new { id = result.Id }, new{success = true,data = result});
+
         }
         catch (Exception ex)
         {
