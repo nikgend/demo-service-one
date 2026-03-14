@@ -19,10 +19,7 @@ BEGIN
         [CreatedBy] NVARCHAR(255) NULL,
         [ModifiedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
         [ModifiedBy] NVARCHAR(255) NULL,
-        [IsActive] BIT NOT NULL DEFAULT 1,
-
-        -- Unique Constraint
-        CONSTRAINT UK_EngagementCode UNIQUE ([EngagementCode])
+        [IsActive] BIT NOT NULL DEFAULT 1
     );
 
     PRINT 'Engagements table created successfully.';

@@ -152,7 +152,7 @@ public class EngagementDbContextExamples
     }
 
     /// <summary>
-    /// Example: Get engagement by code (unique lookup).
+    /// Example: Get engagement by code (returns first match if multiple exist).
     /// </summary>
     public async Task<Engagement?> GetEngagementByCodeExample(string engagementCode)
     {
