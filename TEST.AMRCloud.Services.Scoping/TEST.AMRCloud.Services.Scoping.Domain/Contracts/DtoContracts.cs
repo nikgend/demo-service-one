@@ -8,11 +8,9 @@ public class FundDto
     public int Id { get; set; }
     public string? FundName { get; set; }
     public string? FundCode { get; set; }
-    public string? Status { get; set; }
+    public string? EngagementManager { get; set; }
     public decimal? Amount { get; set; }
     public int? EngagementId { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public string? CreatedBy { get; set; }
 }
 
 /// <summary>
@@ -23,12 +21,9 @@ public class EngagementDto
     public int Id { get; set; }
     public string? EngagementName { get; set; }
     public string? EngagementCode { get; set; }
-    public string? ClientName { get; set; }
-    public string? Status { get; set; }
-    public DateTime? StartDate { get; set; }
-    public DateTime? EndDate { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public string? CreatedBy { get; set; }
+    public string? EngagementManager { get; set; }
+    public string? EngagementPartner { get; set; }
+    public DateTime? PeriodEndDate { get; set; }
 }
 
 /// <summary>
@@ -39,12 +34,9 @@ public class EngagementWithFundsDto
     public int Id { get; set; }
     public string? EngagementName { get; set; }
     public string? EngagementCode { get; set; }
-    public string? ClientName { get; set; }
-    public string? Status { get; set; }
-    public DateTime? StartDate { get; set; }
-    public DateTime? EndDate { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public string? CreatedBy { get; set; }
+    public string? EngagementManager { get; set; }
+    public string? EngagementPartner { get; set; }
+    public DateTime? PeriodEndDate { get; set; }
     public ICollection<FundDto> Funds { get; set; } = new List<FundDto>();
 }
 
@@ -57,10 +49,8 @@ public class RoutineDto
     public string? RoutineName { get; set; }
     public string? RoutineCode { get; set; }
     public string? Description { get; set; }
-    public string? Status { get; set; }
+    public string? EngagementManager { get; set; }
     public int? SequenceNumber { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public string? CreatedBy { get; set; }
 }
 
 /// <summary>
@@ -72,9 +62,7 @@ public class ScopingDetailDto
     public int FundId { get; set; }
     public string? Description { get; set; }
     public string? Scope { get; set; }
-    public string? Status { get; set; }
+    public string? EngagementManager { get; set; }
     public string? Observations { get; set; }
     public int? SequenceNumber { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public string? CreatedBy { get; set; }
 }

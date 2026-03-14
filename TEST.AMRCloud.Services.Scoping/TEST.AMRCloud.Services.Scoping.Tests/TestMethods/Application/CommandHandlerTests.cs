@@ -28,10 +28,9 @@ public class CreateEngagementCommandHandlerTests
         // Arrange
         var engagementName = "New Engagement";
         var engagementCode = "ENG999";
-        var clientName = "New Client";
-        var status = "Active";
-        var startDate = DateTime.Now;
-        var endDate = DateTime.Now.AddMonths(6);
+        var engagementPartner = "New Partner";
+        var engagementManager = "John Manager";
+        var periodEndDate = DateTime.Now.AddMonths(6);
         var createdBy = "TestUser";
 
         var createdEngagement = new Engagement
@@ -39,10 +38,9 @@ public class CreateEngagementCommandHandlerTests
             Id = 1,
             EngagementName = engagementName,
             EngagementCode = engagementCode,
-            ClientName = clientName,
-            Status = status,
-            StartDate = startDate,
-            EndDate = endDate,
+            EngagementPartner = engagementPartner,
+            EngagementManager = engagementManager,
+            PeriodEndDate = periodEndDate,
             CreatedDate = DateTime.Now,
             CreatedBy = createdBy,
             IsActive = true
@@ -52,8 +50,8 @@ public class CreateEngagementCommandHandlerTests
             .Setup(r => r.AddAsync(It.IsAny<Engagement>()))
             .ReturnsAsync(createdEngagement);
 
-        var command = new CreateEngagementCommand(engagementName, engagementCode, clientName,
-            status, startDate, endDate, createdBy);
+        var command = new CreateEngagementCommand(engagementName, engagementCode,
+            engagementManager, engagementPartner, periodEndDate, createdBy);
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -62,8 +60,8 @@ public class CreateEngagementCommandHandlerTests
         Assert.IsNotNull(result);
         Assert.AreEqual(engagementName, result.EngagementName);
         Assert.AreEqual(engagementCode, result.EngagementCode);
-        Assert.AreEqual(clientName, result.ClientName);
-        Assert.AreEqual(status, result.Status);
+        Assert.AreEqual(engagementPartner, result.EngagementPartner);
+        Assert.AreEqual(engagementManager, result.EngagementManager);
         Assert.AreEqual(createdBy, result.CreatedBy);
 
         _mockEngagementRepository.Verify(r => r.AddAsync(It.IsAny<Engagement>()), Times.Once);
@@ -77,8 +75,8 @@ public class CreateEngagementCommandHandlerTests
             .Setup(r => r.AddAsync(It.IsAny<Engagement>()))
             .ReturnsAsync((Engagement?)null);
 
-        var command = new CreateEngagementCommand("Engagement", "ENG001", "Client",
-            "Active", DateTime.Now, null, "TestUser");
+        var command = new CreateEngagementCommand("Engagement", "ENG001",
+            "Test Manager", "Test Partner", DateTime.Now, "TestUser");
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -115,10 +113,9 @@ public class UpdateEngagementCommandHandlerTests
             Id = engagementId,
             EngagementName = "Old Engagement",
             EngagementCode = "ENG001",
-            ClientName = "Old Client",
-            Status = "Inactive",
-            StartDate = DateTime.Now.AddMonths(-6),
-            EndDate = DateTime.Now,
+            EngagementPartner = "Old Partner",
+            EngagementManager = "Old Manager",
+            PeriodEndDate = DateTime.Now,
             CreatedDate = DateTime.Now.AddMonths(-6),
             CreatedBy = "TestUser"
         };
@@ -128,14 +125,9 @@ public class UpdateEngagementCommandHandlerTests
             Id = engagementId,
             EngagementName = "Updated Engagement",
             EngagementCode = "ENG001",
-            ClientName = "Updated Client",
-            Status = "Active",
-            StartDate = DateTime.Now.AddMonths(-6),
-            EndDate = DateTime.Now.AddMonths(6),
-            CreatedDate = DateTime.Now.AddMonths(-6),
-            CreatedBy = "TestUser",
-            ModifiedDate = DateTime.UtcNow,
-            ModifiedBy = "UpdateUser"
+            EngagementPartner = "Updated Partner",
+            EngagementManager = "Updated Manager",
+            PeriodEndDate = DateTime.Now.AddMonths(6)
         };
 
         _mockEngagementRepository
@@ -147,7 +139,7 @@ public class UpdateEngagementCommandHandlerTests
             .ReturnsAsync(updatedEngagement);
 
         var command = new UpdateEngagementCommand(engagementId, "Updated Engagement", "ENG001",
-            "Updated Client", "Active", DateTime.Now.AddMonths(-6), DateTime.Now.AddMonths(6), "UpdateUser");
+            "Updated Manager", "Updated Partner", DateTime.Now.AddMonths(6), "UpdateUser");
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -155,8 +147,8 @@ public class UpdateEngagementCommandHandlerTests
         // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual("Updated Engagement", result.EngagementName);
-        Assert.AreEqual("Updated Client", result.ClientName);
-        Assert.AreEqual("Active", result.Status);
+        Assert.AreEqual("Updated Partner", result.EngagementPartner);
+        Assert.AreEqual("Updated Manager", result.EngagementManager);
 
         _mockEngagementRepository.Verify(r => r.GetByIdAsync(engagementId), Times.Once);
         _mockEngagementRepository.Verify(r => r.UpdateAsync(It.IsAny<Engagement>()), Times.Once);
@@ -173,7 +165,7 @@ public class UpdateEngagementCommandHandlerTests
             .ReturnsAsync((Engagement?)null);
 
         var command = new UpdateEngagementCommand(engagementId, "Engagement", "ENG001",
-            "Client", "Active", DateTime.Now, null, "UpdateUser");
+            "Manager", "Partner", DateTime.Now, "UpdateUser");
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -194,10 +186,9 @@ public class UpdateEngagementCommandHandlerTests
             Id = engagementId,
             EngagementName = "Engagement",
             EngagementCode = "ENG001",
-            ClientName = "Client",
-            Status = "Active",
-            StartDate = DateTime.Now,
-            EndDate = DateTime.Now.AddMonths(6),
+            EngagementPartner = "Partner",
+            EngagementManager = "Active Manager",
+            PeriodEndDate = DateTime.Now.AddMonths(6),
             CreatedDate = DateTime.Now,
             CreatedBy = "TestUser"
         };
@@ -207,14 +198,9 @@ public class UpdateEngagementCommandHandlerTests
             Id = engagementId,
             EngagementName = "Engagement",
             EngagementCode = "ENG001",
-            ClientName = "Updated Client",
-            Status = "Active",
-            StartDate = DateTime.Now,
-            EndDate = DateTime.Now.AddMonths(6),
-            CreatedDate = DateTime.Now,
-            CreatedBy = "TestUser",
-            ModifiedDate = DateTime.UtcNow,
-            ModifiedBy = "UpdateUser"
+            EngagementPartner = "Updated Partner",
+            EngagementManager = "Active Manager",
+            PeriodEndDate = DateTime.Now.AddMonths(6)
         };
 
         _mockEngagementRepository
@@ -225,16 +211,16 @@ public class UpdateEngagementCommandHandlerTests
             .Setup(r => r.UpdateAsync(It.IsAny<Engagement>()))
             .ReturnsAsync(updatedEngagement);
 
-        // Only updating ClientName, others should remain unchanged
+        // Only updating EngagementPartner, others should remain unchanged
         var command = new UpdateEngagementCommand(engagementId, null, null,
-            "Updated Client", null, null, null, "UpdateUser");
+            null, "Updated Partner", null, "UpdateUser");
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
         Assert.IsNotNull(result);
-        Assert.AreEqual("Updated Client", result.ClientName);
+        Assert.AreEqual("Updated Partner", result.EngagementPartner);
         Assert.AreEqual("Engagement", result.EngagementName);
         Assert.AreEqual("ENG001", result.EngagementCode);
 
@@ -268,9 +254,7 @@ public class DeleteEngagementCommandHandlerTests
         {
             Id = engagementId,
             EngagementName = "Test Engagement",
-            EngagementCode = "ENG001",
-            CreatedDate = DateTime.Now,
-            CreatedBy = "TestUser"
+            EngagementCode = "ENG001"
         };
 
         _mockEngagementRepository

@@ -10,21 +10,27 @@ public class CreateEngagementCommand : IRequest<EngagementDto?>
 {
     public string? EngagementName { get; set; }
     public string? EngagementCode { get; set; }
-    public string? ClientName { get; set; }
-    public string? Status { get; set; }
-    public DateTime? StartDate { get; set; }
-    public DateTime? EndDate { get; set; }
-    public string? CreatedBy { get; set; }
+    public string? EngagementManager { get; set; }
+    public string? EngagementPartner { get; set; }
+    public DateTime? PeriodEndDate { get; set; }
 
     public CreateEngagementCommand(EngagementDto engagementDto)
     {
         EngagementName = engagementDto.EngagementName;
         EngagementCode = engagementDto.EngagementCode;
-        ClientName = engagementDto.ClientName;
-        Status = engagementDto.Status;
-        StartDate = engagementDto.StartDate;
-        EndDate = engagementDto.EndDate;
-        CreatedBy = engagementDto.CreatedBy;
+        EngagementManager = engagementDto.EngagementManager;
+        EngagementPartner = engagementDto.EngagementPartner;
+        PeriodEndDate = engagementDto.PeriodEndDate;
+    }
+
+    public CreateEngagementCommand(string? engagementName, string? engagementCode, 
+        string? engagementManager, string? engagementPartner, DateTime? periodEndDate)
+    {
+        EngagementName = engagementName;
+        EngagementCode = engagementCode;
+        EngagementManager = engagementManager;
+        EngagementPartner = engagementPartner;
+        PeriodEndDate = periodEndDate;
     }
 }
 
@@ -36,22 +42,29 @@ public class UpdateEngagementCommand : IRequest<EngagementDto?>
     public int EngagementId { get; set; }
     public string? EngagementName { get; set; }
     public string? EngagementCode { get; set; }
-    public string? ClientName { get; set; }
-    public string? Status { get; set; }
-    public DateTime? StartDate { get; set; }
-    public DateTime? EndDate { get; set; }
-    public string? ModifiedBy { get; set; }
+    public string? EngagementManager { get; set; }
+    public string? EngagementPartner { get; set; }
+    public DateTime? PeriodEndDate { get; set; }
 
     public UpdateEngagementCommand(EngagementDto engagementDto)
     {
         EngagementId = engagementDto.Id;
         EngagementName = engagementDto.EngagementName;
         EngagementCode = engagementDto.EngagementCode;
-        ClientName = engagementDto.ClientName;
-        Status = engagementDto.Status;
-        StartDate = engagementDto.StartDate;
-        EndDate = engagementDto.EndDate;
-        ModifiedBy = engagementDto.CreatedBy;
+        EngagementManager = engagementDto.EngagementManager;
+        EngagementPartner = engagementDto.EngagementPartner;
+        PeriodEndDate = engagementDto.PeriodEndDate;
+    }
+
+    public UpdateEngagementCommand(int engagementId, string? engagementName, string? engagementCode,
+        string? engagementManager, string? engagementPartner, DateTime? periodEndDate)
+    {
+        EngagementId = engagementId;
+        EngagementName = engagementName;
+        EngagementCode = engagementCode;
+        EngagementManager = engagementManager;
+        EngagementPartner = engagementPartner;
+        PeriodEndDate = periodEndDate;
     }
 }
 

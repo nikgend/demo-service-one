@@ -10,7 +10,7 @@ public class Fund : BaseEntity
 {
     public string? FundName { get; set; }
     public string? FundCode { get; set; }
-    public string? Status { get; set; }
+    public string? EngagementManager { get; set; }
     public decimal? Amount { get; set; }
     public int? EngagementId { get; set; }
 
@@ -26,7 +26,7 @@ public class Routine : BaseEntity
     public string? RoutineName { get; set; }
     public string? RoutineCode { get; set; }
     public string? Description { get; set; }
-    public string? Status { get; set; }
+    public string? EngagementManager { get; set; }
     public int? SequenceNumber { get; set; }
 
     public ICollection<FundRoutineMapping> FundMappings { get; set; } = new List<FundRoutineMapping>();
@@ -48,16 +48,15 @@ public class FundRoutineMapping : BaseEntity
 
 /// <summary>
 /// Engagement Aggregate Root.
-/// Represents an engagement with client and fund information.
+/// Represents an engagement with partner and manager information.
 /// </summary>
 public class Engagement : BaseEntity
 {
     public string? EngagementName { get; set; }
     public string? EngagementCode { get; set; }
-    public string? ClientName { get; set; }
-    public string? Status { get; set; }
-    public DateTime? StartDate { get; set; }
-    public DateTime? EndDate { get; set; }
+    public string? EngagementManager { get; set; }
+    public string? EngagementPartner { get; set; }
+    public DateTime? PeriodEndDate { get; set; }
 
     public ICollection<Fund> Funds { get; set; } = new List<Fund>();
 }

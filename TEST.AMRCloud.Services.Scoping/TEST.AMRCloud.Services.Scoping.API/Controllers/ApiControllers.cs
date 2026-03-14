@@ -75,25 +75,25 @@ public class EngagementController : ControllerBase
     }
 
     /// <summary>
-    /// Get engagements by status.
+    /// Get engagements by engagement manager.
     /// </summary>
-    /// <param name="status">Engagement status</param>
-    /// <returns>List of engagements with the specified status</returns>
-    [HttpGet("status/{status}")]
-    public async Task<IActionResult> GetEngagementsByStatus(string status)
+    /// <param name="engagementManager">Engagement manager name</param>
+    /// <returns>List of engagements managed by the specified engagement manager</returns>
+    [HttpGet("manager/{engagementManager}")]
+    public async Task<IActionResult> GetEngagementsByEngagementManager(string engagementManager)
     {
         try
         {
-            _logger.LogInformation("Retrieving engagements with status: {Status}", status);
+            _logger.LogInformation("Retrieving engagements with engagement manager: {EngagementManager}", engagementManager);
 
-            var query = new GetEngagementsByStatusQuery(status);
+            var query = new GetEngagementsByEngagementManagerQuery(engagementManager);
             var result = await _mediator.Send(query);
 
             return Ok(result);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving engagements with status: {Status}", status);
+            _logger.LogError(ex, "Error retrieving engagements with engagement manager: {EngagementManager}", engagementManager);
             return StatusCode(500, "An error occurred while retrieving engagements");
         }
     }
@@ -161,13 +161,7 @@ public class EngagementController : ControllerBase
     /// <summary>
     /// Create a new engagement.
     /// </summary>
-    /// <param name="engagementName">Engagement name</param>
-    /// <param name="engagementCode">Engagement code</param>
-    /// <param name="clientName">Client name</param>
-    /// <param name="status">Engagement status</param>
-    /// <param name="startDate">Start date</param>
-    /// <param name="endDate">End date</param>
-    /// <param name="createdBy">Created by user</param>
+    /// <param name="engagementDto">Engagement data transfer object containing engagement details</param>
     /// <returns>Created engagement details</returns>
     [HttpPost]
     public async Task<IActionResult> CreateEngagement([FromBody] EngagementDto engagementDto)
@@ -197,14 +191,7 @@ public class EngagementController : ControllerBase
     /// <summary>
     /// Update an existing engagement.
     /// </summary>
-    /// <param name="id">Engagement ID</param>
-    /// <param name="engagementName">Engagement name</param>
-    /// <param name="engagementCode">Engagement code</param>
-    /// <param name="clientName">Client name</param>
-    /// <param name="status">Engagement status</param>
-    /// <param name="startDate">Start date</param>
-    /// <param name="endDate">End date</param>
-    /// <param name="modifiedBy">Modified by user</param>
+    /// <param name="engagementDto">Engagement data transfer object containing updated engagement details</param>
     /// <returns>Updated engagement details</returns>
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateEngagement([FromBody] EngagementDto engagementDto)

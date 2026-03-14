@@ -36,11 +36,9 @@ public class GetFundByIdQueryHandler : IRequestHandler<GetFundByIdQuery, FundDto
             Id = fund.Id,
             FundName = fund.FundName,
             FundCode = fund.FundCode,
-            Status = fund.Status,
+            //Status = fund.Status,
             Amount = fund.Amount,
-            EngagementId = fund.EngagementId,
-            CreatedDate = fund.CreatedDate,
-            CreatedBy = fund.CreatedBy
+            EngagementId = fund.EngagementId
         };
     }
 }
@@ -70,11 +68,9 @@ public class GetAllFundsQueryHandler : IRequestHandler<GetAllFundsQuery, IEnumer
             Id = fund.Id,
             FundName = fund.FundName,
             FundCode = fund.FundCode,
-            Status = fund.Status,
+            EngagementManager = fund.EngagementManager,
             Amount = fund.Amount,
-            EngagementId = fund.EngagementId,
-            CreatedDate = fund.CreatedDate,
-            CreatedBy = fund.CreatedBy
+            EngagementId = fund.EngagementId
         };
     }
 }
@@ -108,12 +104,9 @@ public class GetEngagementByIdQueryHandler : IRequestHandler<GetEngagementByIdQu
             Id = engagement.Id,
             EngagementName = engagement.EngagementName,
             EngagementCode = engagement.EngagementCode,
-            ClientName = engagement.ClientName,
-            Status = engagement.Status,
-            StartDate = engagement.StartDate,
-            EndDate = engagement.EndDate,
-            CreatedDate = engagement.CreatedDate,
-            CreatedBy = engagement.CreatedBy
+            EngagementManager = engagement.EngagementManager,
+            EngagementPartner = engagement.EngagementPartner,
+            PeriodEndDate = engagement.PeriodEndDate
         };
     }
 }
@@ -148,10 +141,8 @@ public class GetRoutineByIdQueryHandler : IRequestHandler<GetRoutineByIdQuery, R
             RoutineName = routine.RoutineName,
             RoutineCode = routine.RoutineCode,
             Description = routine.Description,
-            Status = routine.Status,
-            SequenceNumber = routine.SequenceNumber,
-            CreatedDate = routine.CreatedDate,
-            CreatedBy = routine.CreatedBy
+            EngagementManager = routine.EngagementManager,
+            SequenceNumber = routine.SequenceNumber
         };
     }
 }
@@ -186,11 +177,9 @@ public class GetScopingDetailsByFundQueryHandler : IRequestHandler<GetScopingDet
             FundId = detail.FundId,
             Description = detail.Description,
             Scope = detail.Scope,
-            Status = detail.Status,
+            EngagementManager = detail.EngagementManager,
             Observations = detail.Observations,
-            SequenceNumber = detail.SequenceNumber,
-            CreatedDate = detail.CreatedDate,
-            CreatedBy = detail.CreatedBy
+            SequenceNumber = detail.SequenceNumber
         };
     }
 }
@@ -220,31 +209,28 @@ public class GetAllEngagementsQueryHandler : IRequestHandler<GetAllEngagementsQu
             Id = engagement.Id,
             EngagementName = engagement.EngagementName,
             EngagementCode = engagement.EngagementCode,
-            ClientName = engagement.ClientName,
-            Status = engagement.Status,
-            StartDate = engagement.StartDate,
-            EndDate = engagement.EndDate,
-            CreatedDate = engagement.CreatedDate,
-            CreatedBy = engagement.CreatedBy
+            EngagementManager = engagement.EngagementManager,
+            EngagementPartner = engagement.EngagementPartner,
+            PeriodEndDate = engagement.PeriodEndDate
         };
     }
 }
 
 /// <summary>
-/// Handler for GetEngagementsByStatusQuery.
+/// Handler for GetEngagementsByEngagementManagerQuery.
 /// </summary>
-public class GetEngagementsByStatusQueryHandler : IRequestHandler<GetEngagementsByStatusQuery, IEnumerable<EngagementDto>>
+public class GetEngagementsByEngagementManagerQueryHandler : IRequestHandler<GetEngagementsByEngagementManagerQuery, IEnumerable<EngagementDto>>
 {
     private readonly IEngagementRepository _engagementRepository;
 
-    public GetEngagementsByStatusQueryHandler(IEngagementRepository engagementRepository)
+    public GetEngagementsByEngagementManagerQueryHandler(IEngagementRepository engagementRepository)
     {
         _engagementRepository = engagementRepository;
     }
 
-    public async Task<IEnumerable<EngagementDto>> Handle(GetEngagementsByStatusQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<EngagementDto>> Handle(GetEngagementsByEngagementManagerQuery request, CancellationToken cancellationToken)
     {
-        var engagements = await _engagementRepository.GetEngagementsByStatusAsync(request.Status);
+        var engagements = await _engagementRepository.GetEngagementsByEngagementManagerAsync(request.EngagementManager);
         return engagements.Select(MapToDto).ToList();
     }
 
@@ -255,12 +241,9 @@ public class GetEngagementsByStatusQueryHandler : IRequestHandler<GetEngagements
             Id = engagement.Id,
             EngagementName = engagement.EngagementName,
             EngagementCode = engagement.EngagementCode,
-            ClientName = engagement.ClientName,
-            Status = engagement.Status,
-            StartDate = engagement.StartDate,
-            EndDate = engagement.EndDate,
-            CreatedDate = engagement.CreatedDate,
-            CreatedBy = engagement.CreatedBy
+            EngagementManager = engagement.EngagementManager,
+            EngagementPartner = engagement.EngagementPartner,
+            PeriodEndDate = engagement.PeriodEndDate
         };
     }
 }
@@ -294,12 +277,9 @@ public class GetEngagementByCodeQueryHandler : IRequestHandler<GetEngagementByCo
             Id = engagement.Id,
             EngagementName = engagement.EngagementName,
             EngagementCode = engagement.EngagementCode,
-            ClientName = engagement.ClientName,
-            Status = engagement.Status,
-            StartDate = engagement.StartDate,
-            EndDate = engagement.EndDate,
-            CreatedDate = engagement.CreatedDate,
-            CreatedBy = engagement.CreatedBy
+            EngagementManager = engagement.EngagementManager,
+            EngagementPartner = engagement.EngagementPartner,
+            PeriodEndDate = engagement.PeriodEndDate,
         };
     }
 }
@@ -333,22 +313,17 @@ public class GetEngagementWithFundsQueryHandler : IRequestHandler<GetEngagementW
             Id = engagement.Id,
             EngagementName = engagement.EngagementName,
             EngagementCode = engagement.EngagementCode,
-            ClientName = engagement.ClientName,
-            Status = engagement.Status,
-            StartDate = engagement.StartDate,
-            EndDate = engagement.EndDate,
-            CreatedDate = engagement.CreatedDate,
-            CreatedBy = engagement.CreatedBy,
+            EngagementManager = engagement.EngagementManager,
+            EngagementPartner = engagement.EngagementPartner,
+            PeriodEndDate = engagement.PeriodEndDate,
             Funds = engagement.Funds?.Select(f => new FundDto
             {
                 Id = f.Id,
                 FundName = f.FundName,
                 FundCode = f.FundCode,
-                Status = f.Status,
+                EngagementManager = f.EngagementManager,
                 Amount = f.Amount,
-                EngagementId = f.EngagementId,
-                CreatedDate = f.CreatedDate,
-                CreatedBy = f.CreatedBy
+                EngagementId = f.EngagementId
             }).ToList() ?? new List<FundDto>()
         };
     }

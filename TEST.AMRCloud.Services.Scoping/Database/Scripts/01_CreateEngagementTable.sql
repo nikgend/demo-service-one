@@ -12,7 +12,7 @@ BEGIN
         [EngagementName] NVARCHAR(255) NULL,
         [EngagementCode] NVARCHAR(50) NULL,
         [ClientName] NVARCHAR(255) NULL,
-        [Status] NVARCHAR(50) NULL,
+        [EngagementManager] NVARCHAR(255) NULL,
         [StartDate] DATETIME2 NULL,
         [EndDate] DATETIME2 NULL,
         [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
@@ -36,10 +36,10 @@ END;
 -- Create Indexes for Performance
 -- ================================================================
 
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID('Engagements') AND name = 'IX_EngagementStatus')
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID('Engagements') AND name = 'IX_EngagementManager')
 BEGIN
-    CREATE INDEX [IX_EngagementStatus] ON [dbo].[Engagements]([Status]);
-    PRINT 'Index IX_EngagementStatus created.';
+    CREATE INDEX [IX_EngagementManager] ON [dbo].[Engagements]([EngagementManager]);
+    PRINT 'Index IX_EngagementManager created.';
 END;
 
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID('Engagements') AND name = 'IX_EngagementCreatedDate')
@@ -54,10 +54,10 @@ BEGIN
     PRINT 'Index IX_EngagementIsActive created.';
 END;
 
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID('Engagements') AND name = 'IX_Engagements_Status_IsActive')
+IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID('Engagements') AND name = 'IX_Engagements_EngagementManager_IsActive')
 BEGIN
-    CREATE INDEX [IX_Engagements_Status_IsActive] ON [dbo].[Engagements]([Status], [IsActive]);
-    PRINT 'Index IX_Engagements_Status_IsActive created.';
+    CREATE INDEX [IX_Engagements_EngagementManager_IsActive] ON [dbo].[Engagements]([EngagementManager], [IsActive]);
+    PRINT 'Index IX_Engagements_EngagementManager_IsActive created.';
 END;
 
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID('Engagements') AND name = 'IX_Engagements_ClientName')
@@ -102,7 +102,7 @@ BEGIN
         e.[EngagementName],
         e.[EngagementCode],
         e.[ClientName],
-        e.[Status],
+        e.[EngagementManager],
         e.[StartDate],
         e.[EndDate],
         e.[CreatedDate],
@@ -112,7 +112,7 @@ BEGIN
     FROM [dbo].[Engagements] e
     LEFT JOIN [dbo].[Funds] f ON e.[Id] = f.[EngagementId]
     WHERE e.[IsActive] = 1
-    GROUP BY e.[Id], e.[EngagementName], e.[EngagementCode], e.[ClientName], e.[Status],
+    GROUP BY e.[Id], e.[EngagementName], e.[EngagementCode], e.[ClientName], e.[EngagementManager],
              e.[StartDate], e.[EndDate], e.[CreatedDate], e.[CreatedBy], e.[IsActive]';
 
     PRINT 'View vw_EngagementSummary created.';

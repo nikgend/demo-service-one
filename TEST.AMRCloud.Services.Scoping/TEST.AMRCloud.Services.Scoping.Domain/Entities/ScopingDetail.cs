@@ -11,7 +11,7 @@ public class ScopingDetail
     public int FundId { get; set; }
     public string? Description { get; set; }
     public string? Scope { get; set; }
-    public string? Status { get; set; }
+    public string? EngagementManager { get; set; }
     public string? Observations { get; set; }
     public int? SequenceNumber { get; set; }
     public DateTime CreatedDate { get; set; }

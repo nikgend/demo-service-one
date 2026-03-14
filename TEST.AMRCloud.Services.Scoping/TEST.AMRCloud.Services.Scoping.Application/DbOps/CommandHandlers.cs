@@ -24,13 +24,9 @@ public class CreateEngagementCommandHandler : IRequestHandler<CreateEngagementCo
         {
             EngagementName = request.EngagementName,
             EngagementCode = request.EngagementCode,
-            ClientName = request.ClientName,
-            Status = request.Status,
-            StartDate = request.StartDate,
-            EndDate = request.EndDate,
-            CreatedDate = DateTime.UtcNow,
-            CreatedBy = request.CreatedBy,
-            IsActive = true
+            EngagementManager = request.EngagementManager,
+            EngagementPartner = request.EngagementPartner,
+            PeriodEndDate = request.PeriodEndDate
         };
 
         var createdEngagement = await _engagementRepository.AddAsync(engagement);
@@ -48,12 +44,9 @@ public class CreateEngagementCommandHandler : IRequestHandler<CreateEngagementCo
             Id = engagement.Id,
             EngagementName = engagement.EngagementName,
             EngagementCode = engagement.EngagementCode,
-            ClientName = engagement.ClientName,
-            Status = engagement.Status,
-            StartDate = engagement.StartDate,
-            EndDate = engagement.EndDate,
-            CreatedDate = engagement.CreatedDate,
-            CreatedBy = engagement.CreatedBy
+            EngagementManager = engagement.EngagementManager,
+            EngagementPartner = engagement.EngagementPartner,
+            PeriodEndDate = engagement.PeriodEndDate
         };
     }
 }
@@ -80,12 +73,9 @@ public class UpdateEngagementCommandHandler : IRequestHandler<UpdateEngagementCo
 
         engagement.EngagementName = request.EngagementName ?? engagement.EngagementName;
         engagement.EngagementCode = request.EngagementCode ?? engagement.EngagementCode;
-        engagement.ClientName = request.ClientName ?? engagement.ClientName;
-        engagement.Status = request.Status ?? engagement.Status;
-        engagement.StartDate = request.StartDate ?? engagement.StartDate;
-        engagement.EndDate = request.EndDate ?? engagement.EndDate;
-        engagement.ModifiedDate = DateTime.UtcNow;
-        engagement.ModifiedBy = request.ModifiedBy;
+        engagement.EngagementManager = request.EngagementManager ?? engagement.EngagementManager;
+        engagement.EngagementPartner = request.EngagementPartner ?? engagement.EngagementPartner;
+        engagement.PeriodEndDate = request.PeriodEndDate ?? engagement.PeriodEndDate;
 
         var updatedEngagement = await _engagementRepository.UpdateAsync(engagement);
 
@@ -102,12 +92,9 @@ public class UpdateEngagementCommandHandler : IRequestHandler<UpdateEngagementCo
             Id = engagement.Id,
             EngagementName = engagement.EngagementName,
             EngagementCode = engagement.EngagementCode,
-            ClientName = engagement.ClientName,
-            Status = engagement.Status,
-            StartDate = engagement.StartDate,
-            EndDate = engagement.EndDate,
-            CreatedDate = engagement.CreatedDate,
-            CreatedBy = engagement.CreatedBy
+            EngagementManager = engagement.EngagementManager,
+            EngagementPartner = engagement.EngagementPartner,
+            PeriodEndDate = engagement.PeriodEndDate
         };
     }
 }

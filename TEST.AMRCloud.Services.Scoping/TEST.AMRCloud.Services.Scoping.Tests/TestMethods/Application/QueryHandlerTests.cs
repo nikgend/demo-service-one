@@ -33,7 +33,7 @@ public class FundQueryHandlerTests
             Id = fundId,
             FundName = "Test Fund",
             FundCode = "TF001",
-            Status = "Active",
+            EngagementManager = "Test Manager",
             Amount = 1000000,
             CreatedDate = DateTime.Now,
             CreatedBy = "TestUser"
@@ -53,7 +53,7 @@ public class FundQueryHandlerTests
         Assert.AreEqual(fundId, result.Id);
         Assert.AreEqual("Test Fund", result.FundName);
         Assert.AreEqual("TF001", result.FundCode);
-        Assert.AreEqual("Active", result.Status);
+        Assert.AreEqual("Test Manager", result.EngagementManager);
         Assert.AreEqual(1000000, result.Amount);
 
         _mockFundRepository.Verify(r => r.GetByIdAsync(fundId), Times.Once);
@@ -105,10 +105,9 @@ public class EngagementQueryHandlerTests
             Id = engagementId,
             EngagementName = "Test Engagement",
             EngagementCode = "ENG001",
-            ClientName = "Test Client",
-            Status = "Active",
-            StartDate = DateTime.Now.AddMonths(-1),
-            EndDate = DateTime.Now.AddMonths(1),
+            EngagementPartner = "Test Partner",
+            EngagementManager = "Test Manager",
+            PeriodEndDate = DateTime.Now.AddMonths(1),
             CreatedDate = DateTime.Now,
             CreatedBy = "TestUser"
         };
@@ -126,7 +125,7 @@ public class EngagementQueryHandlerTests
         Assert.IsNotNull(result);
         Assert.AreEqual(engagementId, result.Id);
         Assert.AreEqual("Test Engagement", result.EngagementName);
-        Assert.AreEqual("Test Client", result.ClientName);
+        Assert.AreEqual("Test Partner", result.EngagementPartner);
 
         _mockEngagementRepository.Verify(r => r.GetByIdAsync(engagementId), Times.Once);
     }
@@ -159,20 +158,16 @@ public class GetAllEngagementsQueryHandlerTests
                 Id = 1,
                 EngagementName = "Engagement 1",
                 EngagementCode = "ENG001",
-                ClientName = "Client 1",
-                Status = "Active",
-                CreatedDate = DateTime.Now,
-                CreatedBy = "TestUser"
+                EngagementPartner = "Partner 1",
+                EngagementManager = "Manager 1"
             },
             new Engagement
             {
                 Id = 2,
                 EngagementName = "Engagement 2",
                 EngagementCode = "ENG002",
-                ClientName = "Client 2",
-                Status = "Completed",
-                CreatedDate = DateTime.Now,
-                CreatedBy = "TestUser"
+                EngagementPartner = "Partner 2",
+                EngagementManager = "Manager 2"
             }
         };
 
@@ -231,10 +226,10 @@ public class GetEngagementsByStatusQueryHandlerTests
     }
 
     [Test]
-    public async Task Handle_WithValidStatus_ReturnsEngagementsWithStatus()
+    public async Task Handle_WithValidEngagementManager_ReturnsEngagementsWithManager()
     {
         // Arrange
-        var status = "Active";
+        var engagementManager = "Active Manager";
         var engagements = new List<Engagement>
         {
             new Engagement
@@ -242,9 +237,7 @@ public class GetEngagementsByStatusQueryHandlerTests
                 Id = 1,
                 EngagementName = "Engagement 1",
                 EngagementCode = "ENG001",
-                Status = status,
-                CreatedDate = DateTime.Now,
-                CreatedBy = "TestUser"
+                EngagementManager = engagementManager
             }
         };
 
@@ -252,7 +245,7 @@ public class GetEngagementsByStatusQueryHandlerTests
             .Setup(r => r.GetEngagementsByStatusAsync(status))
             .ReturnsAsync(engagements);
 
-        var query = new GetEngagementsByStatusQuery(status);
+        var query = new GetEngagementsByEngagementManagerQuery(engagementManager);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
@@ -260,21 +253,21 @@ public class GetEngagementsByStatusQueryHandlerTests
         // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual(1, result.Count());
-        Assert.AreEqual(status, result.First().Status);
+        Assert.AreEqual(engagementManager, result.First().EngagementManager);
 
-        _mockEngagementRepository.Verify(r => r.GetEngagementsByStatusAsync(status), Times.Once);
+        _mockEngagementRepository.Verify(r => r.GetEngagementsByEngagementManagerAsync(engagementManager), Times.Once);
     }
 
     [Test]
-    public async Task Handle_WithNoMatchingStatus_ReturnsEmptyList()
+    public async Task Handle_WithNoMatchingManager_ReturnsEmptyList()
     {
         // Arrange
-        var status = "NonExistent";
+        var engagementManager = "NonExistent";
         _mockEngagementRepository
-            .Setup(r => r.GetEngagementsByStatusAsync(status))
+            .Setup(r => r.GetEngagementsByEngagementManagerAsync(engagementManager))
             .ReturnsAsync(new List<Engagement>());
 
-        var query = new GetEngagementsByStatusQuery(status);
+        var query = new GetEngagementsByEngagementManagerQuery(engagementManager);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
@@ -283,10 +276,77 @@ public class GetEngagementsByStatusQueryHandlerTests
         Assert.IsNotNull(result);
         Assert.AreEqual(0, result.Count());
 
-        _mockEngagementRepository.Verify(r => r.GetEngagementsByStatusAsync(status), Times.Once);
+        _mockEngagementRepository.Verify(r => r.GetEngagementsByEngagementManagerAsync(engagementManager), Times.Once);
     }
 }
+    public class GetEngagementsByEngagementManagerQueryHandlerTests
+    {
+        private Mock<IEngagementRepository> _mockEngagementRepository = null!;
+        private GetEngagementsByEngagementManagerQueryHandler _handler = null!;
 
+        [SetUp]
+        public void SetUp()
+        {
+            _mockEngagementRepository = new Mock<IEngagementRepository>();
+            _handler = new GetEngagementsByEngagementManagerQueryHandler(_mockEngagementRepository.Object);
+        }
+
+        [Test]
+        public async Task Handle_WithValidEngagementManager_ReturnsEngagementsWithManager()
+        {
+            // Arrange
+            var engagementManager = "John Manager";
+            var engagements = new List<Engagement>
+            {
+                new Engagement
+                {
+                    Id = 1,
+                    EngagementName = "Engagement 1",
+                    EngagementCode = "ENG001",
+                    EngagementManager = engagementManager,
+                    CreatedDate = DateTime.Now,
+                    CreatedBy = "TestUser"
+                }
+            };
+
+            _mockEngagementRepository
+                .Setup(r => r.GetEngagementsByEngagementManagerAsync(engagementManager))
+                .ReturnsAsync(engagements);
+
+            var query = new GetEngagementsByEngagementManagerQuery(engagementManager);
+
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(engagementManager, result.First().EngagementManager);
+
+            _mockEngagementRepository.Verify(r => r.GetEngagementsByEngagementManagerAsync(engagementManager), Times.Once);
+        }
+
+        [Test]
+        public async Task Handle_WithNoMatchingManager_ReturnsEmptyList()
+        {
+            // Arrange
+            var engagementManager = "NonExistent";
+            _mockEngagementRepository
+                .Setup(r => r.GetEngagementsByEngagementManagerAsync(engagementManager))
+                .ReturnsAsync(new List<Engagement>());
+
+            var query = new GetEngagementsByEngagementManagerQuery(engagementManager);
+
+            // Act
+            var result = await _handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(0, result.Count());
+
+            _mockEngagementRepository.Verify(r => r.GetEngagementsByEngagementManagerAsync(engagementManager), Times.Once);
+        }
+    }
 /// <summary>
 /// Unit tests for GetEngagementByCode Query Handler.
 /// </summary>
@@ -313,8 +373,8 @@ public class GetEngagementByCodeQueryHandlerTests
             Id = 1,
             EngagementName = "Test Engagement",
             EngagementCode = code,
-            ClientName = "Test Client",
-            Status = "Active",
+            EngagementPartner = "Test Partner",
+            EngagementManager = "Test Manager",
             CreatedDate = DateTime.Now,
             CreatedBy = "TestUser"
         };

@@ -57,15 +57,15 @@ public class GetAllEngagementsQuery : IRequest<IEnumerable<EngagementDto>>
 }
 
 /// <summary>
-/// Query to get engagements by status.
+/// Query to get engagements by engagement manager.
 /// </summary>
-public class GetEngagementsByStatusQuery : IRequest<IEnumerable<EngagementDto>>
+public class GetEngagementsByEngagementManagerQuery : IRequest<IEnumerable<EngagementDto>>
 {
-    public string Status { get; set; }
+    public string EngagementManager { get; set; }
 
-    public GetEngagementsByStatusQuery(string status)
+    public GetEngagementsByEngagementManagerQuery(string engagementManager)
     {
-        Status = status;
+        EngagementManager = engagementManager;
     }
 }
 

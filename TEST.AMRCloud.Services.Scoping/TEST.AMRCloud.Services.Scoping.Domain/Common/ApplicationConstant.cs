@@ -15,12 +15,4 @@ public static class ApplicationConstant
     public const int MaxPageSize = 500;
 
     public const string DefaultSortField = "CreatedDate";
-
-    // Engagement statuses
-    public const string EngagementActiveStatus = "Active";
-    public const string EngagementClosedStatus = "Closed";
-
-    // Fund statuses
-    public const string FundActiveStatus = "Active";
-    public const string FundInactiveStatus = "Inactive";
 }

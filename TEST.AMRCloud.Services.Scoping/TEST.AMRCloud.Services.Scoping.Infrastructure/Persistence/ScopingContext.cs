@@ -37,8 +37,8 @@ public class ScopingContext : DbContext
             .HasMaxLength(50);
 
         modelBuilder.Entity<Fund>()
-            .Property(f => f.Status)
-            .HasMaxLength(50);
+            .Property(f => f.EngagementManager)
+            .HasMaxLength(255);
 
         // Configure Routine entity
         modelBuilder.Entity<Routine>()
@@ -53,8 +53,8 @@ public class ScopingContext : DbContext
             .HasMaxLength(50);
 
         modelBuilder.Entity<Routine>()
-            .Property(r => r.Status)
-            .HasMaxLength(50);
+            .Property(r => r.EngagementManager)
+            .HasMaxLength(255);
 
         // Configure FundRoutineMapping entity
         modelBuilder.Entity<FundRoutineMapping>()
@@ -85,12 +85,12 @@ public class ScopingContext : DbContext
             .HasMaxLength(50);
 
         modelBuilder.Entity<Engagement>()
-            .Property(e => e.ClientName)
+            .Property(e => e.EngagementManager)
             .HasMaxLength(255);
 
         modelBuilder.Entity<Engagement>()
-            .Property(e => e.Status)
-            .HasMaxLength(50);
+            .Property(e => e.EngagementPartner)
+            .HasMaxLength(255);
 
         modelBuilder.Entity<Engagement>()
             .HasMany(e => e.Funds)
@@ -113,7 +113,7 @@ public class ScopingContext : DbContext
             .HasMaxLength(500);
 
         modelBuilder.Entity<ScopingDetail>()
-            .Property(s => s.Status)
-            .HasMaxLength(50);
+            .Property(s => s.EngagementManager)
+            .HasMaxLength(255);
     }
 }

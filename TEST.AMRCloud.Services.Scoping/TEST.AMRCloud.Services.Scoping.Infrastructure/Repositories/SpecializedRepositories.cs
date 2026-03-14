@@ -11,7 +11,7 @@ namespace TEST.AMRCloud.Services.Scoping.Infrastructure.Repositories;
 public interface IFundRepository : IRepository<Fund>
 {
     Task<Fund?> GetFundByCodeAsync(string fundCode);
-    Task<IEnumerable<Fund>> GetFundsByStatusAsync(string status);
+    Task<IEnumerable<Fund>> GetFundsByEngagementManagerAsync(string engagementManager);
     Task<IEnumerable<Fund>> GetFundsByEngagementAsync(int engagementId);
 }
 
@@ -28,11 +28,11 @@ public class FundRepository : Repository<Fund>, IFundRepository
             .FirstOrDefaultAsync(f => f.FundCode == fundCode);
     }
 
-    public async Task<IEnumerable<Fund>> GetFundsByStatusAsync(string status)
+    public async Task<IEnumerable<Fund>> GetFundsByEngagementManagerAsync(string engagementManager)
     {
         return await _dbSet
             .AsNoTracking()
-            .Where(f => f.Status == status)
+            .Where(f => f.EngagementManager == engagementManager)
             .ToListAsync();
     }
 
@@ -51,7 +51,7 @@ public class FundRepository : Repository<Fund>, IFundRepository
 public interface IRoutineRepository : IRepository<Routine>
 {
     Task<Routine?> GetRoutineByCodeAsync(string routineCode);
-    Task<IEnumerable<Routine>> GetRoutinesByStatusAsync(string status);
+    Task<IEnumerable<Routine>> GetRoutinesByEngagementManagerAsync(string engagementManager);
 }
 
 public class RoutineRepository : Repository<Routine>, IRoutineRepository
@@ -67,11 +67,11 @@ public class RoutineRepository : Repository<Routine>, IRoutineRepository
             .FirstOrDefaultAsync(r => r.RoutineCode == routineCode);
     }
 
-    public async Task<IEnumerable<Routine>> GetRoutinesByStatusAsync(string status)
+    public async Task<IEnumerable<Routine>> GetRoutinesByEngagementManagerAsync(string engagementManager)
     {
         return await _dbSet
             .AsNoTracking()
-            .Where(r => r.Status == status)
+            .Where(r => r.EngagementManager == engagementManager)
             .ToListAsync();
     }
 }
@@ -82,7 +82,7 @@ public class RoutineRepository : Repository<Routine>, IRoutineRepository
 public interface IEngagementRepository : IRepository<Engagement>
 {
     Task<Engagement?> GetEngagementByCodeAsync(string engagementCode);
-    Task<IEnumerable<Engagement>> GetEngagementsByStatusAsync(string status);
+    Task<IEnumerable<Engagement>> GetEngagementsByEngagementManagerAsync(string engagementManager);
     Task<Engagement?> GetEngagementWithFundsAsync(int engagementId);
 }
 
@@ -99,11 +99,11 @@ public class EngagementRepository : Repository<Engagement>, IEngagementRepositor
             .FirstOrDefaultAsync(e => e.EngagementCode == engagementCode);
     }
 
-    public async Task<IEnumerable<Engagement>> GetEngagementsByStatusAsync(string status)
+    public async Task<IEnumerable<Engagement>> GetEngagementsByEngagementManagerAsync(string engagementManager)
     {
         return await _dbSet
             .AsNoTracking()
-            .Where(e => e.Status == status)
+            .Where(e => e.EngagementManager == engagementManager)
             .ToListAsync();
     }
 

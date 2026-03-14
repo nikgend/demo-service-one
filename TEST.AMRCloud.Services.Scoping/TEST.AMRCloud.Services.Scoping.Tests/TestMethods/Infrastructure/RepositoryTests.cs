@@ -29,7 +29,7 @@ public class FundRepositoryTests
             Id = 1,
             FundName = "Test Fund",
             FundCode = fundCode,
-            Status = "Active"
+            EngagementManager = "Test Manager"
         };
 
         _mockFundRepository
@@ -63,27 +63,27 @@ public class FundRepositoryTests
     }
 
     [Test]
-    public async Task GetFundsByStatusAsync_WithActiveStatus_ReturnsFunds()
+    public async Task GetFundsByEngagementManagerAsync_WithActiveManager_ReturnsFunds()
     {
         // Arrange
-        var status = "Active";
+        var engagementManager = "John Manager";
         var funds = new[]
         {
-            new Fund { Id = 1, FundName = "Fund 1", Status = status },
-            new Fund { Id = 2, FundName = "Fund 2", Status = status }
+            new Fund { Id = 1, FundName = "Fund 1", EngagementManager = engagementManager },
+            new Fund { Id = 2, FundName = "Fund 2", EngagementManager = engagementManager }
         };
 
         _mockFundRepository
-            .Setup(r => r.GetFundsByStatusAsync(status))
+            .Setup(r => r.GetFundsByEngagementManagerAsync(engagementManager))
             .ReturnsAsync(funds);
 
         // Act
-        var result = await _mockFundRepository.Object.GetFundsByStatusAsync(status);
+        var result = await _mockFundRepository.Object.GetFundsByEngagementManagerAsync(engagementManager);
 
         // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual(2, result.Count());
-        Assert.IsTrue(result.All(f => f.Status == status));
+        Assert.IsTrue(result.All(f => f.EngagementManager == engagementManager));
     }
 }
 
@@ -111,7 +111,8 @@ public class EngagementRepositoryTests
             Id = 1,
             EngagementName = "Test Engagement",
             EngagementCode = engagementCode,
-            ClientName = "Test Client"
+            EngagementPartner = "Test Partner",
+            EngagementManager = "Test Manager"
         };
 
         _mockEngagementRepository
@@ -124,26 +125,26 @@ public class EngagementRepositoryTests
         // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual(engagementCode, result.EngagementCode);
-        Assert.AreEqual("Test Client", result.ClientName);
+        Assert.AreEqual("Test Partner", result.EngagementPartner);
     }
 
     [Test]
-    public async Task GetEngagementsByStatusAsync_ReturnsEngagements()
+    public async Task GetEngagementsByEngagementManagerAsync_ReturnsEngagements()
     {
         // Arrange
-        var status = "Active";
+        var engagementManager = "John Manager";
         var engagements = new[]
         {
-            new Engagement { Id = 1, EngagementName = "Engagement 1", Status = status },
-            new Engagement { Id = 2, EngagementName = "Engagement 2", Status = status }
+            new Engagement { Id = 1, EngagementName = "Engagement 1", EngagementManager = engagementManager },
+            new Engagement { Id = 2, EngagementName = "Engagement 2", EngagementManager = engagementManager }
         };
 
         _mockEngagementRepository
-            .Setup(r => r.GetEngagementsByStatusAsync(status))
+            .Setup(r => r.GetEngagementsByEngagementManagerAsync(engagementManager))
             .ReturnsAsync(engagements);
 
         // Act
-        var result = await _mockEngagementRepository.Object.GetEngagementsByStatusAsync(status);
+        var result = await _mockEngagementRepository.Object.GetEngagementsByEngagementManagerAsync(engagementManager);
 
         // Assert
         Assert.IsNotNull(result);
