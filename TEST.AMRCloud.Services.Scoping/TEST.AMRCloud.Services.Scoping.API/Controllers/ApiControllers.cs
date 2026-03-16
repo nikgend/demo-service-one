@@ -241,7 +241,7 @@ public class EngagementController : ControllerBase
             }
 
             _logger.LogInformation("Engagement with ID {EngagementId} deleted successfully", id);
-            return NoContent();
+            return CreatedAtAction(nameof(GetEngagement), new { id = id }, new { success = true, data = result });
         }
         catch (Exception ex)
         {
