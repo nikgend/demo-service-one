@@ -121,11 +121,26 @@ public class DeleteEngagementCommandHandler : IRequestHandler<DeleteEngagementCo
 
     public async Task<bool> Handle(DeleteEngagementCommand request, CancellationToken cancellationToken)
     {
-        var engagement = await _engagementRepository.GetByIdAsync(request.EngagementId);
+        try
+        {
+            var engagement = await _engagementRepository.GetByIdAsync(request.EngagementId);
 
-        if (engagement == null)
-            return false;
+            if (engagement == null)
+                return false;
 
-        return true;
+            var result = await _engagementRepository.DeleteAsync(request.EngagementId);
+
+            if (result)
+            {
+                await _engagementRepository.SaveChangesAsync();
+            }
+
+            return result;
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
     }
 }
