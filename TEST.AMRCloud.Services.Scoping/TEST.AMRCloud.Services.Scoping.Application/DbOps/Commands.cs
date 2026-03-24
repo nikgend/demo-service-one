@@ -80,3 +80,24 @@ public class DeleteEngagementCommand : IRequest<bool>
         EngagementId = engagementId;
     }
 }
+
+public class CreateFundCommand : IRequest<FundDto>
+{
+    public string FundCode { get; set; }
+    public string FundName { get; set; }
+    public string Description { get; set; }
+}
+
+public class UpdateFundCommand : IRequest<FundDto>
+{
+    public int Id { get; set; }
+    public string FundCode { get; set; }
+    public string FundName { get; set; }
+    public string Description { get; set; }
+}
+
+public class DeleteFundCommand : IRequest<bool>
+{
+    public int Id { get; set; }
+}
+

@@ -13,10 +13,7 @@ public class ScopingContext : DbContext
     public ScopingContext(DbContextOptions<ScopingContext> options) : base(options)
     {
     }
-
     public DbSet<Fund> Funds => Set<Fund>();
-    public DbSet<Routine> Routines => Set<Routine>();
-    public DbSet<FundRoutineMapping> FundRoutineMappings => Set<FundRoutineMapping>();
     public DbSet<Engagement> Engagements => Set<Engagement>();
     public DbSet<ScopingDetail> ScopingDetails => Set<ScopingDetail>();
 
@@ -28,49 +25,7 @@ public class ScopingContext : DbContext
         modelBuilder.Entity<Fund>()
             .HasKey(f => f.Id);
 
-        modelBuilder.Entity<Fund>()
-            .Property(f => f.FundName)
-            .HasMaxLength(255);
-
-        modelBuilder.Entity<Fund>()
-            .Property(f => f.FundCode)
-            .HasMaxLength(50);
-
-        modelBuilder.Entity<Fund>()
-            .Property(f => f.EngagementManager)
-            .HasMaxLength(255);
-
         // Configure Routine entity
-        modelBuilder.Entity<Routine>()
-            .HasKey(r => r.Id);
-
-        modelBuilder.Entity<Routine>()
-            .Property(r => r.RoutineName)
-            .HasMaxLength(255);
-
-        modelBuilder.Entity<Routine>()
-            .Property(r => r.RoutineCode)
-            .HasMaxLength(50);
-
-        modelBuilder.Entity<Routine>()
-            .Property(r => r.EngagementManager)
-            .HasMaxLength(255);
-
-        // Configure FundRoutineMapping entity
-        modelBuilder.Entity<FundRoutineMapping>()
-            .HasKey(frm => frm.Id);
-
-        modelBuilder.Entity<FundRoutineMapping>()
-            .HasOne(frm => frm.Fund)
-            .WithMany(f => f.RoutineMappings)
-            .HasForeignKey(frm => frm.FundId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<FundRoutineMapping>()
-            .HasOne(frm => frm.Routine)
-            .WithMany(r => r.FundMappings)
-            .HasForeignKey(frm => frm.RoutineId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         // Configure Engagement entity
         modelBuilder.Entity<Engagement>()
@@ -91,22 +46,10 @@ public class ScopingContext : DbContext
         modelBuilder.Entity<Engagement>()
             .Property(e => e.EngagementPartner)
             .HasMaxLength(255);
-
-        modelBuilder.Entity<Engagement>()
-            .HasMany(e => e.Funds)
-            .WithOne()
-            .HasForeignKey(f => f.EngagementId)
-            .OnDelete(DeleteBehavior.Cascade);
-
+                
         // Configure ScopingDetail entity
         modelBuilder.Entity<ScopingDetail>()
             .HasKey(s => s.Id);
-
-        modelBuilder.Entity<ScopingDetail>()
-            .HasOne(s => s.Fund)
-            .WithMany(f => f.ScopingDetails)
-            .HasForeignKey(s => s.FundId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ScopingDetail>()
             .Property(s => s.Description)
@@ -115,5 +58,15 @@ public class ScopingContext : DbContext
         modelBuilder.Entity<ScopingDetail>()
             .Property(s => s.EngagementManager)
             .HasMaxLength(255);
+        modelBuilder.Entity<Fund>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.FundCode).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.FundName).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.CreatedAt).IsRequired();
+            entity.Property(e => e.UpdatedAt);
+        });
+
     }
 }

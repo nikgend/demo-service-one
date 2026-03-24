@@ -3,81 +3,10 @@ using TEST.AMRCloud.Services.Scoping.Domain.Contracts;
 using TEST.AMRCloud.Services.Scoping.Infrastructure.Repositories;
 using TEST.AMRCloud.Services.Scoping.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using TEST.AMRCloud.Services.Scoping.Domain.Common;
 
 namespace TEST.AMRCloud.Services.Scoping.Application.DbOps;
 
-/// <summary>
-/// Handler for GetFundByIdQuery.
-/// Retrieves fund information from the database and maps to DTO.
-/// </summary>
-public class GetFundByIdQueryHandler : IRequestHandler<GetFundByIdQuery, FundDto?>
-{
-    private readonly IFundRepository _fundRepository;
-
-    public GetFundByIdQueryHandler(IFundRepository fundRepository)
-    {
-        _fundRepository = fundRepository;
-    }
-
-    public async Task<FundDto?> Handle(GetFundByIdQuery request, CancellationToken cancellationToken)
-    {
-        var fund = await _fundRepository.GetByIdAsync(request.FundId);
-
-        if (fund == null)
-            return null;
-
-        return MapToDto(fund);
-    }
-
-    private FundDto MapToDto(Domain.AggregateRoots.Fund fund)
-    {
-        return new FundDto
-        {
-            Id = fund.Id,
-            FundName = fund.FundName,
-            FundCode = fund.FundCode,
-            //Status = fund.Status,
-            Amount = fund.Amount,
-            EngagementId = fund.EngagementId
-        };
-    }
-}
-
-/// <summary>
-/// Handler for GetAllFundsQuery.
-/// </summary>
-public class GetAllFundsQueryHandler : IRequestHandler<GetAllFundsQuery, IEnumerable<FundDto>>
-{
-    private readonly IFundRepository _fundRepository;
-
-    public GetAllFundsQueryHandler(IFundRepository fundRepository)
-    {
-        _fundRepository = fundRepository;
-    }
-
-    public async Task<IEnumerable<FundDto>> Handle(GetAllFundsQuery request, CancellationToken cancellationToken)
-    {
-        var funds = await _fundRepository.GetAllAsync();
-        return funds.Select(MapToDto).ToList();
-    }
-
-    private FundDto MapToDto(Domain.AggregateRoots.Fund fund)
-    {
-        return new FundDto
-        {
-            Id = fund.Id,
-            FundName = fund.FundName,
-            FundCode = fund.FundCode,
-            EngagementManager = fund.EngagementManager,
-            Amount = fund.Amount,
-            EngagementId = fund.EngagementId
-        };
-    }
-}
-
-/// <summary>
-/// Handler for GetEngagementByIdQuery.
-/// </summary>
 public class GetEngagementByIdQueryHandler : IRequestHandler<GetEngagementByIdQuery, EngagementDto?>
 {
     private readonly IEngagementRepository _engagementRepository;
@@ -107,79 +36,6 @@ public class GetEngagementByIdQueryHandler : IRequestHandler<GetEngagementByIdQu
             EngagementManager = engagement.EngagementManager,
             EngagementPartner = engagement.EngagementPartner,
             PeriodEndDate = engagement.PeriodEndDate
-        };
-    }
-}
-
-/// <summary>
-/// Handler for GetRoutineByIdQuery.
-/// </summary>
-public class GetRoutineByIdQueryHandler : IRequestHandler<GetRoutineByIdQuery, RoutineDto?>
-{
-    private readonly IRoutineRepository _routineRepository;
-
-    public GetRoutineByIdQueryHandler(IRoutineRepository routineRepository)
-    {
-        _routineRepository = routineRepository;
-    }
-
-    public async Task<RoutineDto?> Handle(GetRoutineByIdQuery request, CancellationToken cancellationToken)
-    {
-        var routine = await _routineRepository.GetByIdAsync(request.RoutineId);
-
-        if (routine == null)
-            return null;
-
-        return MapToDto(routine);
-    }
-
-    private RoutineDto MapToDto(Domain.AggregateRoots.Routine routine)
-    {
-        return new RoutineDto
-        {
-            Id = routine.Id,
-            RoutineName = routine.RoutineName,
-            RoutineCode = routine.RoutineCode,
-            Description = routine.Description,
-            EngagementManager = routine.EngagementManager,
-            SequenceNumber = routine.SequenceNumber
-        };
-    }
-}
-
-/// <summary>
-/// Handler for GetScopingDetailsByFundQuery.
-/// </summary>
-public class GetScopingDetailsByFundQueryHandler : IRequestHandler<GetScopingDetailsByFundQuery, IEnumerable<ScopingDetailDto>>
-{
-    private readonly ScopingContext _context;
-
-    public GetScopingDetailsByFundQueryHandler(ScopingContext context)
-    {
-        _context = context;
-    }
-
-    public async Task<IEnumerable<ScopingDetailDto>> Handle(GetScopingDetailsByFundQuery request, CancellationToken cancellationToken)
-    {
-        var details = await _context.ScopingDetails
-            .AsNoTracking()
-            .Where(s => s.FundId == request.FundId)
-            .ToListAsync();
-
-        return details.Select(MapToDto).ToList();
-    }
-
-    private ScopingDetailDto MapToDto(Domain.Entities.ScopingDetail detail)
-    {
-        return new ScopingDetailDto
-        {
-            Id = detail.Id,
-            FundId = detail.FundId,
-            Description = detail.Description,
-            Scope = detail.Scope,
-            EngagementManager = detail.EngagementManager,
-            Observations = detail.Observations,
-            SequenceNumber = detail.SequenceNumber
         };
     }
 }
@@ -284,47 +140,55 @@ public class GetEngagementByCodeQueryHandler : IRequestHandler<GetEngagementByCo
     }
 }
 
-/// <summary>
-/// Handler for GetEngagementWithFundsQuery.
-/// </summary>
-public class GetEngagementWithFundsQueryHandler : IRequestHandler<GetEngagementWithFundsQuery, EngagementWithFundsDto?>
+public class GetFundByIdQueryHandler : IRequestHandler<GetFundByIdQuery, FundDto>
 {
-    private readonly IEngagementRepository _engagementRepository;
+    private readonly IFundRepository _fundRepository;
 
-    public GetEngagementWithFundsQueryHandler(IEngagementRepository engagementRepository)
+    public GetFundByIdQueryHandler(IFundRepository fundRepository)
     {
-        _engagementRepository = engagementRepository;
+        _fundRepository = fundRepository;
     }
 
-    public async Task<EngagementWithFundsDto?> Handle(GetEngagementWithFundsQuery request, CancellationToken cancellationToken)
+    public async Task<FundDto> Handle(GetFundByIdQuery request, CancellationToken cancellationToken)
     {
-        var engagement = await _engagementRepository.GetEngagementWithFundsAsync(request.EngagementId);
+        var fund = await _fundRepository.GetByIdAsync(request.Id, cancellationToken);
+        if (fund == null)
+            throw new NotFoundException($"Fund with Id {request.Id} not found.");
 
-        if (engagement == null)
-            return null;
-
-        return MapToDto(engagement);
-    }
-
-    private EngagementWithFundsDto MapToDto(Domain.AggregateRoots.Engagement engagement)
-    {
-        return new EngagementWithFundsDto
+        return new FundDto
         {
-            Id = engagement.Id,
-            EngagementName = engagement.EngagementName,
-            EngagementCode = engagement.EngagementCode,
-            EngagementManager = engagement.EngagementManager,
-            EngagementPartner = engagement.EngagementPartner,
-            PeriodEndDate = engagement.PeriodEndDate,
-            Funds = engagement.Funds?.Select(f => new FundDto
-            {
-                Id = f.Id,
-                FundName = f.FundName,
-                FundCode = f.FundCode,
-                EngagementManager = f.EngagementManager,
-                Amount = f.Amount,
-                EngagementId = f.EngagementId
-            }).ToList() ?? new List<FundDto>()
+            Id = fund.Id,
+            FundCode = fund.FundCode,
+            FundName = fund.FundName,
+            Description = fund.Description,
+            CreatedAt = fund.CreatedAt,
+            UpdatedAt = fund.UpdatedAt
         };
     }
 }
+
+public class GetAllFundsQueryHandler : IRequestHandler<GetAllFundsQuery, List<FundDto>>
+{
+    private readonly IFundRepository _fundRepository;
+
+    public GetAllFundsQueryHandler(IFundRepository fundRepository)
+    {
+        _fundRepository = fundRepository;
+    }
+
+    public async Task<List<FundDto>> Handle(GetAllFundsQuery request, CancellationToken cancellationToken)
+    {
+        var funds = await _fundRepository.GetAllAsync(cancellationToken);
+
+        return funds.Select(f => new FundDto
+        {
+            Id = f.Id,
+            FundCode = f.FundCode,
+            FundName = f.FundName,
+            Description = f.Description,
+            CreatedAt = f.CreatedAt,
+            UpdatedAt = f.UpdatedAt
+        }).ToList();
+    }
+}
+

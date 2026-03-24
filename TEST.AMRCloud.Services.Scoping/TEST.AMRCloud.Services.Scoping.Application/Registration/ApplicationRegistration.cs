@@ -18,10 +18,9 @@ public static class ApplicationRegistration
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationRegistration).Assembly));
 
         // Register repositories
-        services.AddScoped<IFundRepository, FundRepository>();
-        services.AddScoped<IRoutineRepository, RoutineRepository>();
         services.AddScoped<IEngagementRepository, EngagementRepository>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IFundRepository, FundRepository>();
 
         return services;
     }

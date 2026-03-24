@@ -4,26 +4,6 @@ using TEST.AMRCloud.Services.Scoping.Domain.Contracts;
 namespace TEST.AMRCloud.Services.Scoping.Application.DbOps;
 
 /// <summary>
-/// Query to retrieve a fund by its ID.
-/// </summary>
-public class GetFundByIdQuery : IRequest<FundDto?>
-{
-    public int FundId { get; set; }
-
-    public GetFundByIdQuery(int fundId)
-    {
-        FundId = fundId;
-    }
-}
-
-/// <summary>
-/// Query to retrieve all funds.
-/// </summary>
-public class GetAllFundsQuery : IRequest<IEnumerable<FundDto>>
-{
-}
-
-/// <summary>
 /// Query to retrieve engagement by ID.
 /// </summary>
 public class GetEngagementByIdQuery : IRequest<EngagementDto?>
@@ -33,19 +13,6 @@ public class GetEngagementByIdQuery : IRequest<EngagementDto?>
     public GetEngagementByIdQuery(int engagementId)
     {
         EngagementId = engagementId;
-    }
-}
-
-/// <summary>
-/// Query to get routine information.
-/// </summary>
-public class GetRoutineByIdQuery : IRequest<RoutineDto?>
-{
-    public int RoutineId { get; set; }
-
-    public GetRoutineByIdQuery(int routineId)
-    {
-        RoutineId = routineId;
     }
 }
 
@@ -107,3 +74,13 @@ public class GetScopingDetailsByFundQuery : IRequest<IEnumerable<ScopingDetailDt
         FundId = fundId;
     }
 }
+public class GetFundByIdQuery : IRequest<FundDto>
+{
+    public int Id { get; set; }
+    public GetFundByIdQuery(int id) => Id = id;
+}
+
+public class GetAllFundsQuery : IRequest<List<FundDto>>
+{
+}
+

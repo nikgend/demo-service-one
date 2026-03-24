@@ -1,19 +1,6 @@
 namespace TEST.AMRCloud.Services.Scoping.Domain.Contracts;
 
 /// <summary>
-/// Data Transfer Object for Fund.
-/// </summary>
-public class FundDto
-{
-    public int Id { get; set; }
-    public string? FundName { get; set; }
-    public string? FundCode { get; set; }
-    public string? EngagementManager { get; set; }
-    public decimal? Amount { get; set; }
-    public int? EngagementId { get; set; }
-}
-
-/// <summary>
 /// Data Transfer Object for Engagement.
 /// </summary>
 public class EngagementDto
@@ -40,18 +27,6 @@ public class EngagementWithFundsDto
     public ICollection<FundDto> Funds { get; set; } = new List<FundDto>();
 }
 
-/// <summary>
-/// Data Transfer Object for Routine.
-/// </summary>
-public class RoutineDto
-{
-    public int Id { get; set; }
-    public string? RoutineName { get; set; }
-    public string? RoutineCode { get; set; }
-    public string? Description { get; set; }
-    public string? EngagementManager { get; set; }
-    public int? SequenceNumber { get; set; }
-}
 
 /// <summary>
 /// DTO for ScopingDetail.
@@ -65,4 +40,14 @@ public class ScopingDetailDto
     public string? EngagementManager { get; set; }
     public string? Observations { get; set; }
     public int? SequenceNumber { get; set; }
+}
+
+public class FundDto
+{
+    public int Id { get; set; }
+    public string FundCode { get; set; }
+    public string FundName { get; set; }
+    public string Description { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }

@@ -1,6 +1,8 @@
 using MediatR;
 using TEST.AMRCloud.Services.Scoping.Domain.AggregateRoots;
+using TEST.AMRCloud.Services.Scoping.Domain.Common;
 using TEST.AMRCloud.Services.Scoping.Domain.Contracts;
+using TEST.AMRCloud.Services.Scoping.Domain.Entities;
 using TEST.AMRCloud.Services.Scoping.Infrastructure.Repositories;
 
 namespace TEST.AMRCloud.Services.Scoping.Application.DbOps;
@@ -144,3 +146,91 @@ public class DeleteEngagementCommandHandler : IRequestHandler<DeleteEngagementCo
         }
     }
 }
+
+public class CreateFundCommandHandler : IRequestHandler<CreateFundCommand, FundDto>
+{
+    private readonly IFundRepository _fundRepository;
+
+    public CreateFundCommandHandler(IFundRepository fundRepository)
+    {
+        _fundRepository = fundRepository;
+    }
+
+    public async Task<FundDto> Handle(CreateFundCommand request, CancellationToken cancellationToken)
+    {
+        var fund = new Fund
+        {
+            FundCode = request.FundCode,
+            FundName = request.FundName,
+            Description = request.Description,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _fundRepository.AddAsync(fund, cancellationToken);
+
+        return new FundDto
+        {
+            Id = fund.Id,
+            FundCode = fund.FundCode,
+            FundName = fund.FundName,
+            Description = fund.Description,
+            CreatedAt = fund.CreatedAt,
+            UpdatedAt = fund.UpdatedAt
+        };
+    }
+}
+
+public class UpdateFundCommandHandler : IRequestHandler<UpdateFundCommand, FundDto>
+{
+    private readonly IFundRepository _fundRepository;
+
+    public UpdateFundCommandHandler(IFundRepository fundRepository)
+    {
+        _fundRepository = fundRepository;
+    }
+
+    public async Task<FundDto> Handle(UpdateFundCommand request, CancellationToken cancellationToken)
+    {
+        var fund = await _fundRepository.GetByIdAsync(request.Id, cancellationToken);
+        if (fund == null)
+            throw new NotFoundException($"Fund with Id {request.Id} not found.");
+
+        fund.FundCode = request.FundCode;
+        fund.FundName = request.FundName;
+        fund.Description = request.Description;
+        fund.UpdatedAt = DateTime.UtcNow;
+
+        await _fundRepository.UpdateAsync(fund, cancellationToken);
+
+        return new FundDto
+        {
+            Id = fund.Id,
+            FundCode = fund.FundCode,
+            FundName = fund.FundName,
+            Description = fund.Description,
+            CreatedAt = fund.CreatedAt,
+            UpdatedAt = fund.UpdatedAt
+        };
+    }
+}
+
+public class DeleteFundCommandHandler : IRequestHandler<DeleteFundCommand, bool>
+{
+    private readonly IFundRepository _fundRepository;
+
+    public DeleteFundCommandHandler(IFundRepository fundRepository)
+    {
+        _fundRepository = fundRepository;
+    }
+
+    public async Task<bool> Handle(DeleteFundCommand request, CancellationToken cancellationToken)
+    {
+        var fund = await _fundRepository.GetByIdAsync(request.Id, cancellationToken);
+        if (fund == null)
+            throw new NotFoundException($"Fund with Id {request.Id} not found.");
+
+        await _fundRepository.DeleteAsync(fund, cancellationToken);
+        return true;
+    }
+}
+
